@@ -12,7 +12,7 @@ def tablatemp(s):
 
 def CargarFiltros(d):
     d = tablatemp(d)
-    consulta = f"""SELECT DISTINCT Categoria, ZONA, TIPO FROM {d} WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` = "Nota de credito Factura";"""
+    consulta = f"""SELECT DISTINCT Categoria, ZONA, TIPO FROM {d} WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` != "Nota de credito Factura";"""
     resp = Consultar(consulta)
     categorias = [row["Categoria"] for row in resp]
     zonas = [row["ZONA"] for row in resp]
@@ -30,7 +30,7 @@ def CargarFiltros(d):
 
 def GenerarFiltro(data):
     f1 , f2 , d , c , z , t , s = data.get('fechaInicial') , data.get('fechaFinal') , data.get('dominio') , data.get('categorias') , data.get('zonas') , data.get('tipos') , data.get('dias')
-    filtros = f"""WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` = "Nota de credito Factura" AND FECHAREAL BETWEEN '{f1}' AND '{f2}'"""
+    filtros = f"""WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` != "Nota de credito Factura" AND FECHAREAL BETWEEN '{f1}' AND '{f2}'"""
     if z != []:
         z = ', '.join(f'\'{zona}\'' for zona in z)
         filtros += f"AND ZONA in ({z})"
