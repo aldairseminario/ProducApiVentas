@@ -11,8 +11,8 @@ CORS(app)
 @app.route('/f',methods=['POST'])
 def filtro():
     data = request.get_json()
-    c,z,t = CargarFiltros(data)
-    return jsonify({"z":z,"c":c,"t":t})
+    c,z,t ,tr = CargarFiltros(data)
+    return jsonify({"zona":z,"categoria":c,"tipo":t,"turno":tr})
 
 @app.route('/NewProc', methods=['POST'])
 def Newfiltro():
