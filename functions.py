@@ -13,24 +13,27 @@ def tablatemp(s):
 def CargarFiltros(data):
     f1 , f2 , d = data.get('fechaInicial') , data.get('fechaFinal') , data.get('dominio')
     d = tablatemp(d)
-    consulta = f"""SELECT DISTINCT Categoria, ZONA, TIPO FROM {d} WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` != "Nota de credito Factura" AND FECHAREAL BETWEEN '{f1}' AND '{f2}';"""
+    consulta = f"""SELECT DISTINCT Categoria, ZONA, TIPO , NUEVOTURNO FROM {d} WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` != "Nota de credito Factura" AND FECHAREAL BETWEEN '{f1}' AND '{f2}';"""
     resp = Consultar(consulta)
     categorias = [row["Categoria"] for row in resp]
     zonas = [row["ZONA"] for row in resp]
     tipos = [row["TIPO"] for row in resp]
+    turno = [row["NUEVOTURNO"] for row in resp]
     # eliminar duplicados 
     categorias = list(set(categorias))
     zonas = list(set(zonas))
     tipos = list(set(tipos))
+    turno = list(set(turno))
     #odenar
     categorias.sort()
     zonas.sort()
     tipos.sort()
+    turno.sort()
 
-    return categorias,zonas,tipos
+    return categorias,zonas,tipos,turno
 
 def GenerarFiltro(data):
-    f1 , f2 , d , c , z , t , s = data.get('fechaInicial') , data.get('fechaFinal') , data.get('dominio') , data.get('categorias') , data.get('zonas') , data.get('tipos') , data.get('dias')
+    f1 , f2 , d , c , z , t , s , tr = data.get('fechaInicial') , data.get('fechaFinal') , data.get('dominio') , data.get('categorias') , data.get('zonas') , data.get('tipos') , data.get('dias') , data.get('turno')
     filtros = f"""WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` != "Nota de credito Factura" AND FECHAREAL BETWEEN '{f1}' AND '{f2}'"""
     if z != []:
         z = ', '.join(f'\'{zona}\'' for zona in z)
@@ -44,6 +47,9 @@ def GenerarFiltro(data):
     if s != []:
         s = ', '.join(f'\'{dias}\'' for dias in s)
         filtros += f"AND DIASEMANA in ({s})"
+    if tr != []:
+        tr = ', '.join(f'\'{turno}\'' for turno in tr)
+        filtros += f"AND NUEVOTURNO in ({tr})"
     return filtros, d
 
 def NewConsultas(data):
@@ -72,5 +78,5 @@ def NewConsultas(data):
       for row in result:
           val=row[0]
           datos.append(json.loads(val))
-          Arrayjson[f"{consul['name']}"] = datos
+      Arrayjson[f"{consul['name']}"] = datos
   return Arrayjson
