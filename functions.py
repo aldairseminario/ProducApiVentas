@@ -10,9 +10,10 @@ def tablatemp(s):
     s = ""
   return s
 
-def CargarFiltros(d):
+def CargarFiltros(data):
+    f1 , f2 , d = data.get('fechaInicial') , data.get('fechaFinal') , data.get('dominio')
     d = tablatemp(d)
-    consulta = f"""SELECT DISTINCT Categoria, ZONA, TIPO FROM {d} WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` != "Nota de credito Factura";"""
+    consulta = f"""SELECT DISTINCT Categoria, ZONA, TIPO FROM {d} WHERE `Tipodoc.` != "Nota de credito Boleta" AND `Tipodoc.` != "Nota de credito Factura" AND FECHAREAL BETWEEN '{f1}' AND '{f2}';"""
     resp = Consultar(consulta)
     categorias = [row["Categoria"] for row in resp]
     zonas = [row["ZONA"] for row in resp]
