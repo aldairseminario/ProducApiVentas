@@ -8,11 +8,10 @@ app = Flask(__name__)
 
 CORS(app)
 
-@app.route('/f',methods=['GET'])
+@app.route('/f',methods=['POST'])
 def filtro():
-    data = request.args
-    d = data.get('d')
-    c,z,t = CargarFiltros(d)
+    data = request.get_json()
+    c,z,t = CargarFiltros(data)
     return jsonify({"z":z,"c":c,"t":t})
 
 @app.route('/NewProc', methods=['POST'])
